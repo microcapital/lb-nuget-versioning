@@ -40,7 +40,7 @@ stages:
         condition: eq(variables['Build.Reason'], 'PullRequest')
         name: SetPRBuildName
       - bash: |
-           echo "##vso[build.updatebuildnumber]$(major).$(minor).$(brpatch)-$(Build.SourceBranchName)"
+           echo "##vso[build.updatebuildnumber]$(major).$(minor).$(brpatch)"
         condition: ne(variables['Build.Reason'], 'PullRequest')
         name: SetBranchBuildName
       
