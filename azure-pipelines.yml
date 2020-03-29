@@ -19,7 +19,7 @@ variables:
   buildConfiguration: 'Release'
   major: 2
   minor: 2
-  patch: 1
+
 
 
 stages:
@@ -68,7 +68,6 @@ stages:
           versioningScheme: byPrereleaseNumber
           majorVersion: '$(Major)'
           minorVersion: '$(Minor)'
-          patchVersion: '$(Patch)'
 
 
       - task: PublishBuildArtifacts@1
