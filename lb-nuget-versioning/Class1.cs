@@ -12,8 +12,9 @@ namespace lb_nuget_versioning
         }
         public int Count()
         {
-            _count++;
-            if(_count%2==0)
+
+            _count= _count+1;
+            if (_count%2==0)
             return _count;
             return 0;
         }
