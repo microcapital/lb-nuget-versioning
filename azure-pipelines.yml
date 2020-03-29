@@ -15,24 +15,11 @@ variables:
   buildConfiguration: 'Release'
   major: 2
   minor: 1
-name: $(major).$(minor)$(Rev:.r)
+  name: $(major).$(minor)$(Rev:.r)
 
 
 stages:
 
-# Versioning master branch builds
-
-- stage:
-  displayName: Build_Master_Version_Number
-  condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
-  jobs:
-  - job: Build_Master_Version_Number
-    variables:
-       patch: $[counter(variables['minor'], 0)]
-    steps:
-      - bash: |
-           echo "##vso[build.updatebuildnumber]$(major).$(minor).$(patch)"
-        name: SetMasterBuildName
 
 # Versioning feature branch and PR builds
 - stage:
@@ -52,21 +39,74 @@ stages:
            echo "##vso[build.updatebuildnumber]$(major).$(minor).$(brpatch)-$(Build.SourceBranchName)"
         condition: ne(variables['Build.Reason'], 'PullRequest')
         name: SetBranchBuildName
+      
+      - task: DotNetCoreCLI@2
+        displayName: "NuGet Restore"
+        inputs:
+          command: restore
+          projects: '**/*.csproj'
+
+      - task: DotNetCoreCLI@2
+        displayName: "Build Solution"
+        inputs:
+          command: build
+          projects: '**/*.csproj'
+          arguments: '--configuration $(buildConfiguration)'
+    
+      - task: DotNetCoreCLI@2
+        displayName: 'Create NuGet Package - Release Version'
+        inputs:
+          command: pack
+          packDirectory: '$(Build.ArtifactStagingDirectory)/packages/releases'
+          arguments: '--configuration $(buildConfiguration)'
+          nobuild: true
+
+      - task: PublishBuildArtifacts@1
+        inputs:
+          PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+          ArtifactName: 'drop'
+          publishLocation: 'Container'
 
 
+# Versioning master branch builds
 
-# Stage for building your application
-
-- stage: Build_Steps
-  displayName: Build_Steps
-  condition: always()
-  jobs:  
-  - job: Build_Steps
-    displayName: Build_Steps
+- stage:
+  displayName: Build_Master_Version_Number
+  condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
+  jobs:
+  - job: Build_Master_Version_Number
+    variables:
+       patch: $[counter(variables['minor'], 0)]
     steps:
-    - script: echo Hello, world!
-      name: 'Run_a_one_line_script'
-    - script: |
-          echo Add other tasks to build, test, and deploy your project.
-          echo See https://aka.ms/yaml
-      name: 'Run_a_multi_line_cript'
+      - bash: |
+           echo "##vso[build.updatebuildnumber]$(major).$(minor).$(patch)"
+        name: SetMasterBuildName
+      - task: DotNetCoreCLI@2
+        displayName: "NuGet Restore"
+        inputs:
+          command: restore
+          projects: '**/*.csproj'
+
+      - task: DotNetCoreCLI@2
+        displayName: "Build Solution"
+        inputs:
+          command: build
+          projects: '**/*.csproj'
+          arguments: '--configuration $(buildConfiguration)'
+    
+      - task: DotNetCoreCLI@2
+        displayName: 'Create NuGet Package - Release Version'
+        inputs:
+          command: pack
+          packDirectory: '$(Build.ArtifactStagingDirectory)/packages/prereleases'
+          arguments: '--configuration $(buildConfiguration)'
+          nobuild: true
+
+      - task: PublishBuildArtifacts@1
+        inputs:
+          PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+          ArtifactName: 'drop'
+          publishLocation: 'Container'
+
+
+
