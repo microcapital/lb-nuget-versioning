@@ -45,25 +45,15 @@ stages:
        brpatch: $[counter(variables['build.sourcebranchname'], 0)]
     steps:
       - bash: |
-           echo "##vso[build.updatebuildnumber]$(major).$(minor)-PullRequest.$(prpatch)"
+           echo "##vso[build.updatebuildnumber]$(major).$(minor).$(prpatch)-PullRequest"
         condition: eq(variables['Build.Reason'], 'PullRequest')
         name: SetPRBuildName
       - bash: |
-           echo "##vso[build.updatebuildnumber]$(major).$(minor)-$(Build.SourceBranchName).$(brpatch)"
+           echo "##vso[build.updatebuildnumber]$(major).$(minor).$(brpatch)-$(Build.SourceBranchName)"
         condition: ne(variables['Build.Reason'], 'PullRequest')
         name: SetBranchBuildName
 
-- stage:
-  displayName: Build_Master_Version_Number
-  condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
-  jobs:
-  - job: Build_Master_Version_Number
-    variables:
-       patch: $[counter(variables['minor'], 0)]
-    steps:
-      - bash: |
-           echo "##vso[build.updatebuildnumber]$(major).$(minor).$(patch)"
-        name: SetMasterBuildName
+
 
 # Stage for building your application
 
