@@ -19,22 +19,57 @@ name: $(major).$(minor)$(Rev:.r)
 
 
 stages:
+
+# Versioning master branch builds
+
+- stage:
+  displayName: Build_Master_Version_Number
+  condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
+  jobs:
+  - job: Build_Master_Version_Number
+    variables:
+       patch: $[counter(variables['minor'], 0)]
+    steps:
+      - bash: |
+           echo "##vso[build.updatebuildnumber]$(major).$(minor).$(patch)"
+        name: SetMasterBuildName
+
+# Versioning feature branch and PR builds
 - stage:
   displayName: Build_Branch_Version_Number
   condition: ne(variables['Build.SourceBranch'], 'refs/heads/master')
   jobs:
   - job: Build_Branch_Version_Number
     variables:
+       prpatch: $[counter(variables['system.pullrequest.pullrequestid'], 0)]
        brpatch: $[counter(variables['build.sourcebranchname'], 0)]
     steps:
+      - bash: |
+           echo "##vso[build.updatebuildnumber]$(major).$(minor)-PullRequest.$(prpatch)"
+        condition: eq(variables['Build.Reason'], 'PullRequest')
+        name: SetPRBuildName
       - bash: |
            echo "##vso[build.updatebuildnumber]$(major).$(minor)-$(Build.SourceBranchName).$(brpatch)"
         condition: ne(variables['Build.Reason'], 'PullRequest')
         name: SetBranchBuildName
 
+- stage:
+  displayName: Build_Master_Version_Number
+  condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
+  jobs:
+  - job: Build_Master_Version_Number
+    variables:
+       patch: $[counter(variables['minor'], 0)]
+    steps:
+      - bash: |
+           echo "##vso[build.updatebuildnumber]$(major).$(minor).$(patch)"
+        name: SetMasterBuildName
+
+# Stage for building your application
 
 - stage: Build_Steps
   displayName: Build_Steps
+  condition: always()
   jobs:  
   - job: Build_Steps
     displayName: Build_Steps
