@@ -15,7 +15,7 @@ variables:
   buildConfiguration: 'Release'
   major: 2
   minor: 1
-  name: $(major).$(minor)$(Rev:.r)
+  patch: $(Rev:.r)
 
 
 stages:
@@ -23,10 +23,10 @@ stages:
 
 # Versioning feature branch and PR builds
 - stage:
-  displayName: Build_Branch_Version_Number
+  displayName: Publish_PreRelease_Artifact
   condition: ne(variables['Build.SourceBranch'], 'refs/heads/master')
   jobs:
-  - job: Build_Branch_Version_Number
+  - job: Publish_PreRelease_Artifact
     variables:
        prpatch: $[counter(variables['system.pullrequest.pullrequestid'], 0)]
        brpatch: $[counter(variables['build.sourcebranchname'], 0)]
@@ -72,10 +72,10 @@ stages:
 # Versioning master branch builds
 
 - stage:
-  displayName: Build_Master_Version_Number
+  displayName: Publish_Release_Artifact
   condition: eq(variables['Build.SourceBranch'], 'refs/heads/master')
   jobs:
-  - job: Build_Master_Version_Number
+  - job: Publish_Release_Artifact
     variables:
        patch: $[counter(variables['minor'], 0)]
     steps:
