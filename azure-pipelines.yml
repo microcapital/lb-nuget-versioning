@@ -13,22 +13,35 @@ variables:
   solution: '**/*.sln'
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
+  major: 2
+  minor: 0
+name: $(major).$(minor)$(Rev:.r)
 
-steps:
-- task: NuGetToolInstaller@1
 
-- task: NuGetCommand@2
-  inputs:
-    restoreSolution: '$(solution)'
+stages:
+- stage:
+  displayName: Build_Branch_Version_Number
+  condition: ne(variables['Build.SourceBranch'], 'refs/heads/master')
+  jobs:
+  - job: Build_Branch_Version_Number
+    variables:
+       brpatch: $[counter(variables['build.sourcebranchname'], 0)]
+    steps:
+      - bash: |
+           echo "##vso[build.updatebuildnumber]$(major).$(minor)-$(Build.SourceBranchName).$(brpatch)"
+        condition: ne(variables['Build.Reason'], 'PullRequest')
+        name: SetBranchBuildName
 
-- task: VSBuild@1
-  inputs:
-    solution: '$(solution)'
-    msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:DesktopBuildPackageLocation="$(build.artifactStagingDirectory)\WebApp.zip" /p:DeployIisAppPath="Default Web Site"'
-    platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration)'
 
-- task: VSTest@2
-  inputs:
-    platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration)'
+- stage: Build_Steps
+  displayName: Build_Steps
+  jobs:  
+  - job: Build_Steps
+    displayName: Build_Steps
+    steps:
+    - script: echo Hello, world!
+      name: 'Run_a_one_line_script'
+    - script: |
+          echo Add other tasks to build, test, and deploy your project.
+          echo See https://aka.ms/yaml
+      name: 'Run_a_multi_line_cript'
