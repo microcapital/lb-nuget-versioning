@@ -67,8 +67,7 @@ stages:
           packDirectory: '$(Build.ArtifactStagingDirectory)/packages/prereleases'
           arguments: '--configuration $(buildConfiguration)'
           nobuild: true
-          versioningScheme: 'byEnvVar'
-          versionEnvVar: '$(Build.BuildNumber)'
+
 
 
       - task: PublishBuildArtifacts@1
@@ -103,6 +102,8 @@ stages:
           command: build
           projects: '**/*.csproj'
           arguments: '--configuration $(buildConfiguration)'
+          versioningScheme: 'byEnvVar'
+          versionEnvVar: '$(Build.BuildNumber)'
     
       - task: DotNetCoreCLI@2
         displayName: 'Create NuGet Package - Release Version'
@@ -111,8 +112,6 @@ stages:
           packDirectory: '$(Build.ArtifactStagingDirectory)/packages/releases'
           arguments: '--configuration $(buildConfiguration)'
           nobuild: true
-          versioningScheme: 'byEnvVar'
-          versionEnvVar: '$(Build.BuildNumber)'
 
 
       - task: PublishBuildArtifacts@1
