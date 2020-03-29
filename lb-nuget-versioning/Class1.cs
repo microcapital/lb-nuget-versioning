@@ -15,7 +15,7 @@ namespace lb_nuget_versioning
             _count++;
             if(_count%2==0)
             return _count;
-            return 1;
+            return 3;
         }
     }
 }
