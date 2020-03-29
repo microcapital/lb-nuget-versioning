@@ -34,6 +34,7 @@ stages:
     variables:
        prpatch: $[counter(variables['system.pullrequest.pullrequestid'], 0)]
        brpatch: $[counter(variables['build.sourcebranchname'], 0)]
+       patch: $[counter(variables['minor'], 0)]
     steps:
       - bash: |
            echo "##vso[build.updatebuildnumber]$(major).$(minor).$(prpatch)-PullRequest"
