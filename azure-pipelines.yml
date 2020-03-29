@@ -51,14 +51,14 @@ stages:
         inputs:
           command: build
           projects: '**/*.csproj'
-          arguments: '--configuration $(buildConfiguration) /p:Version=$(major).$(minor).$(brpatch)-$(Build.SourceBranchName)'
+          arguments: '--configuration $(buildConfiguration) /p:Version=$(Build.BuildNumber)'
     
       - task: DotNetCoreCLI@2
         displayName: 'Create NuGet Package - Release Version'
         inputs:
           command: pack
           packDirectory: '$(Build.ArtifactStagingDirectory)/packages/prereleases'
-          arguments: '--configuration $(buildConfiguration) -p:PackageVersion=$(major).$(minor).$(brpatch)-$(Build.SourceBranchName)'
+          arguments: '--configuration $(buildConfiguration) -p:PackageVersion=$(Build.BuildNumber)'
           nobuild: true
 
 
@@ -93,14 +93,14 @@ stages:
         inputs:
           command: build
           projects: '**/*.csproj'
-          arguments: '--configuration $(buildConfiguration) /p:Version=$(major).$(minor).$(patch)'
+          arguments: '--configuration $(buildConfiguration) /p:Version=$(Build.BuildNumber)'
     
       - task: DotNetCoreCLI@2
         displayName: 'Create NuGet Package - Release Version'
         inputs:
           command: pack
           packDirectory: '$(Build.ArtifactStagingDirectory)/packages/releases'
-          arguments: '--configuration $(buildConfiguration) -p:PackageVersion=$(major).$(minor).$(patch)'
+          arguments: '--configuration $(buildConfiguration) -p:PackageVersion=$(Build.BuildNumber)'
           nobuild: true
 
 
