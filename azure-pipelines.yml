@@ -58,14 +58,13 @@ stages:
           arguments: '--configuration $(buildConfiguration)'
     
       - task: DotNetCoreCLI@2
-        displayName: 'Create NuGet Package - prerelease Version'
+        displayName: 'Pack (Prerelease)'
         inputs:
           command: pack
-          buildProperties: 'VersionSuffix="prerelease-$(Build.SourceBranchName)"'
+          buildProperties: 'VersionSuffix=".$(Build.BuildId)-prerelease"'
           packDirectory: '$(Build.ArtifactStagingDirectory)/packages/prereleases'
           arguments: '--configuration $(buildConfiguration)'
-          nobuild: false
-          versioningScheme: 'byBuildNumber'
+          nobuild: true
 
 
 
