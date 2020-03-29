@@ -66,10 +66,8 @@ stages:
           packDirectory: '$(Build.ArtifactStagingDirectory)/packages/prereleases'
           arguments: '--configuration $(buildConfiguration)'
           nobuild: true
-          versioningScheme: 'byPrereleaseNumber'
-          majorVersion: '$(Major)'
-          minorVersion: '$(Minor)'
-          patchVersion: '$(Patch)'
+          versioningScheme: byEnvVar
+          versionEnvVar: version
 
       - task: PublishBuildArtifacts@1
         inputs:
