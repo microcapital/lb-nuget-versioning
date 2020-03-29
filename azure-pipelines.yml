@@ -67,6 +67,7 @@ stages:
           arguments: '--configuration $(buildConfiguration)'
           nobuild: true
           versioningScheme: 'byBuildNumber'
+          buildProperties: 'VersionSuffix="prerelease-$(Build.SourceBranchName)"'
 
 
 
