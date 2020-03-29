@@ -18,8 +18,8 @@ variables:
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
   major: 2
-  minor: 1
-  patch: $(Rev:.r)
+  minor: 2
+  patch: 1
 
 
 stages:
@@ -62,7 +62,6 @@ stages:
         displayName: 'Pack (Prerelease)'
         inputs:
           command: pack
-          buildProperties: 'VersionSuffix="prerelease.$(Build.BuildId)"'
           packDirectory: '$(Build.ArtifactStagingDirectory)/packages/prereleases'
           arguments: '--configuration $(buildConfiguration)'
           nobuild: true
