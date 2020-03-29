@@ -61,7 +61,7 @@ stages:
         displayName: 'Create NuGet Package - Release Version'
         inputs:
           command: pack
-          buildProperties: 'VersionSuffix="$(Build.SourceBranchName)"'
+          buildProperties: 'VersionSuffix="prerelease-$(Build.SourceBranchName)"'
           packDirectory: '$(Build.ArtifactStagingDirectory)/packages/prereleases'
           arguments: '--configuration $(buildConfiguration)'
           nobuild: true
