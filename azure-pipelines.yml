@@ -51,7 +51,7 @@ stages:
         inputs:
           command: build
           projects: '**/*.csproj'
-          arguments: '--configuration $(buildConfiguration)'
+          arguments: '--configuration $(buildConfiguration) /p:Version=$(major).$(minor).$(brpatch)-$(Build.SourceBranchName)'
     
       - task: DotNetCoreCLI@2
         displayName: 'Create NuGet Package - Release Version'
@@ -93,7 +93,7 @@ stages:
         inputs:
           command: build
           projects: '**/*.csproj'
-          arguments: '--configuration $(buildConfiguration)'
+          arguments: '--configuration $(buildConfiguration) /p:Version=$(major).$(minor).$(patch)'
     
       - task: DotNetCoreCLI@2
         displayName: 'Create NuGet Package - Release Version'
