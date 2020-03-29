@@ -62,11 +62,11 @@ stages:
         displayName: 'Pack (Prerelease)'
         inputs:
           command: pack
-          buildProperties: 'VersionSuffix="-prerelease.$(Build.BuildId)"'
+          buildProperties: 'VersionSuffix="prerelease.$(Build.BuildId)"'
           packDirectory: '$(Build.ArtifactStagingDirectory)/packages/prereleases'
           arguments: '--configuration $(buildConfiguration)'
           nobuild: true
-
+          versioningScheme: 'byBuildNumber'
 
 
       - task: PublishBuildArtifacts@1
