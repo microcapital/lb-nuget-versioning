@@ -63,10 +63,10 @@ stages:
         displayName: 'Create NuGet Package - Release Version'
         inputs:
           command: pack
-          buildProperties: 'VersionSuffix="$(Build.BuildNumber)"'
           packDirectory: '$(Build.ArtifactStagingDirectory)/packages/prereleases'
           arguments: '--configuration $(buildConfiguration)'
           nobuild: true
+          versioningScheme: 'byBuildNumber'
 
 
 
