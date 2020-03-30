@@ -8,7 +8,7 @@ namespace lb_nuget_versioning
 
         public Class1()
         {
-            _count = 2;
+            _count = 3;
         }
         public int Count()
         {
