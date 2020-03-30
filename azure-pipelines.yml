@@ -68,7 +68,7 @@ stages:
           arguments: '--configuration $(buildConfiguration)'
           nobuild: true
           versioningScheme: byEnvVar
-          versionEnvVar: packageVersion
+          versionEnvVar: '$(packageVersion)-prerealease.$(Build.BuildId)'
 
       - task: PublishBuildArtifacts@1
         inputs:
