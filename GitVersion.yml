@@ -1,9 +1,8 @@
 assembly-versioning-scheme: MajorMinorPatch
-mode: ContinuousDelivery
+mode: Mainline 
 next-version: 3.1.2
 branches:
   feature:
-    mode: ContinuousDelivery
     tag: alpha
 ignore:
   sha: []
