@@ -18,7 +18,7 @@ variables:
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
   major: 2
-  minor: 2
+  minor: 3
 name: $(Build.DefinitionName)-$(date:yyyyMMdd)$(rev:.r)
 
 
