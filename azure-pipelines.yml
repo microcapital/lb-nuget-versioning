@@ -19,7 +19,7 @@ variables:
   buildConfiguration: 'Release'
   major: 2
   minor: 2
-
+name: $(Build.DefinitionName)-$(date:yyyyMMdd)$(rev:.r)
 
 
 stages:
@@ -66,8 +66,7 @@ stages:
           packDirectory: '$(Build.ArtifactStagingDirectory)/packages/prereleases'
           arguments: '--configuration $(buildConfiguration)'
           nobuild: true
-          versioningScheme: byEnvVar
-          versionEnvVar: version
+          versioningScheme: byBuildNumber 
 
       - task: PublishBuildArtifacts@1
         inputs:
