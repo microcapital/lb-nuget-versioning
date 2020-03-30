@@ -17,9 +17,7 @@ variables:
   solution: '**/*.sln'
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
-  major: 2
-  minor: 3
-name: $(Build.DefinitionName)-$(date:yyyyMMdd)$(rev:.r)
+
 
 
 stages:
@@ -31,21 +29,10 @@ stages:
   condition: ne(variables['Build.SourceBranch'], 'refs/heads/master')
   jobs:
   - job: Publish_PreRelease_Artifact
-    variables:
-       prpatch: $[counter(variables['system.pullrequest.pullrequestid'], 0)]
-       brpatch: $[counter(variables['build.sourcebranchname'], 0)]
-       patch: $[counter(variables['minor'], 0)]
-       packageVersion: '$(Build.BuildNumber)-prerelease-$(Build.BuildID)'
-
     steps:
-      - bash: |
-           echo "##vso[build.updatebuildnumber]$(major).$(minor).$(prpatch)-PullRequest"
-        condition: eq(variables['Build.Reason'], 'PullRequest')
-        name: SetPRBuildName
-      - bash: |
-           echo "##vso[build.updatebuildnumber]$(major).$(minor).$(patch)"
-        condition: ne(variables['Build.Reason'], 'PullRequest')
-        name: SetBranchBuildName
+      - task: GitVersion@5
+        inputs:
+          runtime: 'core'
       
       - task: DotNetCoreCLI@2
         displayName: "NuGet Restore"
@@ -58,18 +45,17 @@ stages:
         inputs:
           command: build
           projects: '**/*.csproj'
-          arguments: '--configuration $(buildConfiguration)'
+          arguments: '--configuration $(buildConfiguration) /p:Version=$(GitVersion.NuGetVersion)'
+          versioningScheme: byBuildNumber
     
       - task: DotNetCoreCLI@2
         displayName: 'Pack (Prerelease)'
         inputs:
           command: pack
-          configuration: 'Release'
           packDirectory: '$(Build.ArtifactStagingDirectory)/packages/prereleases'
-          arguments: '--configuration $(buildConfiguration)'
           nobuild: true
           versioningScheme: byEnvVar
-          versionEnvVar: packageVersion
+          versionEnvVar: GitVersion.NuGetVersion
 
       - task: PublishBuildArtifacts@1
         inputs:
