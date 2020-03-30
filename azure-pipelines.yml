@@ -35,8 +35,7 @@ stages:
        prpatch: $[counter(variables['system.pullrequest.pullrequestid'], 0)]
        brpatch: $[counter(variables['build.sourcebranchname'], 0)]
        patch: $[counter(variables['minor'], 0)]
-       versionBuildNumber: $[counter(variables['build.buildnumber'], 1)]
-       packageVersion: '$(Build.BuildNumber)-prerelease-$(versionBuildNumber)'
+       packageVersion: '$(Build.BuildNumber)-prerelease-$(BuildID)'
 
     steps:
       - bash: |
