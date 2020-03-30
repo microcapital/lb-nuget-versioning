@@ -20,7 +20,7 @@ namespace lb_nuget_versioning
 
         public int Count5()
         {
-            return 1;
+            return 2;
         }
     }
 }
