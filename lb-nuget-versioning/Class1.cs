@@ -15,7 +15,7 @@ namespace lb_nuget_versioning
             _count++;
             if(_count%2==0)
             return _count;
-            return 66;
+            return 67;
         }
 
         public int Count5()
